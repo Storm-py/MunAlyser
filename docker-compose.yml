@@ -25,5 +25,8 @@ services:
     environment:
       - REDIS_HOST=${REDIS_HOST}
       - MONGO_URI=${MONGODB_URI}
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     volumes:
       - ./apps/worker:/app
