@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { Search, Loader2 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -77,6 +78,11 @@ export default function Dashboard() {
             )}
           </button>
         </form>
+        <Link to="/joblist">
+            <button>
+              Click here to see the jobs
+            </button>
+        </Link>
 
         {status && (
           <div className={`mt-6 p-4 rounded-md ${status.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>

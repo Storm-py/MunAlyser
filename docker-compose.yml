@@ -2,7 +2,7 @@ version: '3.8'
 services:
   redis:
     image: redis:alpine
-    container_name: antigravity_redis
+    container_name: MunAlyser_redis
     ports:
       - "6379:6379"
 
@@ -14,7 +14,15 @@ services:
     depends_on:
       - redis              
     environment:
-      - REDIS_HOST=${REDIS_HOST}   
+      - REDIS_HOST=${REDIS_HOST}
+      - CORS_ORIGIN=${CORS_ORIGIN}  
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - REFRESH_TOKEN_EXPIRY=${REFRESH_TOKEN_EXPIRY}
+      - ACCESS_TOKEN_EXPIRY=${ACCESS_TOKEN_EXPIRY} 
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
 
   worker:
     build: ./apps/worker
@@ -30,3 +38,15 @@ services:
       - 8.8.4.4
     volumes:
       - ./apps/worker:/app
+
+
+  web:
+    build: ./apps/web
+    container_name: mun_web
+    depends_on:
+      - redis
+      - api
+      - worker
+    ports:
+      - "5173:5173"
+

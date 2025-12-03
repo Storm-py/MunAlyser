@@ -10,10 +10,7 @@ const jobQueue = new Queue('job-hunter-queue', {
   connection: redisOptions
 });
 
-/**
- * Helper function to add a job to the queue
- * @param {object} data - { role, location }
- */
+
 export const addScrapingJob = async (data) => {
   const job = await jobQueue.add('scrape-linkedin', data, {
     attempts: 3,             

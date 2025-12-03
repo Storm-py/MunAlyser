@@ -33,7 +33,7 @@ export default function JobList() {
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Header Section */}
+     
       <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Job Feed 📋</h1>
@@ -47,7 +47,7 @@ export default function JobList() {
         </button>
       </div>
 
-      {/* Empty State */}
+      
       {jobs.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 bg-white rounded-xl border-2 border-dashed border-gray-300">
           <div className="bg-gray-50 p-4 rounded-full mb-4">
@@ -57,14 +57,14 @@ export default function JobList() {
           <p className="text-gray-500 mt-1">Start a new hunt from the dashboard to populate this list.</p>
         </div>
       ) : (
-        /* Job Grid */
+        
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {jobs.map((job) => (
             <div 
               key={job._id} 
               className="group bg-white flex flex-col h-full p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-200"
             >
-              {/* Card Header */}
+              
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
@@ -77,7 +77,7 @@ export default function JobList() {
                 </div>
               </div>
               
-              {/* Tags / Metadata */}
+              
               <div className="flex flex-wrap gap-2 mb-4">
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                   <MapPin className="w-3 h-3 mr-1" />
@@ -89,7 +89,7 @@ export default function JobList() {
                 </span>
               </div>
 
-              {/* Description Preview (The New Part!) */}
+              
               <div className="flex-1 mb-6">
                 <div className="flex items-start space-x-2">
                   <AlignLeft className="w-4 h-4 text-gray-400 mt-1 shrink-0" />
@@ -99,7 +99,7 @@ export default function JobList() {
                 </div>
               </div>
 
-              {/* Action Button */}
+              
               <div className="mt-auto pt-4 border-t border-gray-100">
                 <a 
                   href={job.link} 
