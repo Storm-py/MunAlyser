@@ -16,10 +16,12 @@ app.use(express.static('public'));
 
 import jobRoutes from './routes/job.routes.js';
 import userRoutes from './routes/user.routes.js';
+import aiRoutes from './routes/ai.routes.js';
 
 
 app.use('/api/jobs',jobRoutes)
 app.use('/api/users',userRoutes)
+app.use('/api/ai',aiRoutes)
 
 
 

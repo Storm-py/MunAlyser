@@ -31,10 +31,16 @@ const jobSchema= new mongoose.Schema(
             type: Date,
             default: Date.now
         },
-        datePosted: String,
         description: {
             type: String,
         },
+        aiAnalysis: {
+        matchScore: Number,
+        summary: String,
+        missingSkills: [String],
+        status: String 
+    },
+        datePosted: String,
     },
     {
         timestamps:true

@@ -13,26 +13,30 @@ export default function Signup() {
     password: '',
   });
   const [avatar, setAvatar] = useState(null);
-  const [coverImage, setCoverImage] = useState(null);
+  const [cv, setCv] = useState(null)
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e, type) => {
+  const handleAvatarChange = (e, type) => {
     const file = e.target.files[0];
     if (type === 'avatar') setAvatar(file);
-    else setCoverImage(file);
   };
+
+  const handleCvChange=(e,type)=>{
+    const file=e.target.files[0];
+    if(type=== 'cv' ) setCv(file)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    if (!avatar) {
-      setError('Avatar is required');
+    if (!avatar && !cv) {
+      setError('Avatar and Cv is required');
       setLoading(false);
       return;
     }
@@ -44,10 +48,9 @@ export default function Signup() {
       data.append('email', formData.email);
       data.append('password', formData.password);
       data.append('avatar', avatar);
-      if (coverImage) data.append('coverImage', coverImage);
+      data.append('cv',cv)
 
      
-      console.log(data)
      
       await axios.post('http://localhost:3000/api/users/register', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -190,9 +193,26 @@ export default function Signup() {
                    </div>
                    <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                       <span>Upload</span>
-                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileChange(e, 'avatar')} />
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleAvatarChange(e, 'avatar')} />
                    </label>
                    {avatar && <span className="text-sm text-gray-500">{avatar.name}</span>}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Cv (Required)</label>
+                <div className="mt-1 flex items-center space-x-4 border-2 border-dashed border-gray-300 rounded-md p-4 hover:bg-gray-50 transition-colors">
+                   <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                      {cv ? (
+                        <img src={URL.createObjectURL(cv)} alt="Cv" className="h-full w-full object-cover" />
+                      ) : (
+                        <ImageIcon className="h-6 w-6 text-gray-400" />
+                      )}
+                   </div>
+                   <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <span>Upload</span>
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleCvChange(e, 'cv')} />
+                   </label>
+                   {cv && <span className="text-sm text-gray-500">{cv.name}</span>}
                 </div>
               </div>
               <div>

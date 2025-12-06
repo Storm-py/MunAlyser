@@ -6,7 +6,7 @@ import {Job} from "../models/job.model.js";
 
 const jobHunt=asyncHandler(async(req,res)=>{
 
-    const {role,location}=req.body;
+    const {role,location,experienceLevel}=req.body;
 
     const userId=req.user._id;
 
@@ -14,7 +14,7 @@ const jobHunt=asyncHandler(async(req,res)=>{
 
     if(!role || !location) throw new ApiError(400,"Role and Location are required");
 
-    const job = addScrapingJob({role,location, userId})
+    const job = addScrapingJob({role,location, userId, experienceLevel})
 
 
     console.log(`🎯 [API] Job added: ${role} in ${location}`);

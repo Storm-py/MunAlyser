@@ -29,14 +29,20 @@ const userSchema=new mongoose.Schema(
             type:String,
             required:true,
         },
+        cv:{
+            type:String,
+            required:true,
+        },
+        parsedCv:{
+            type:String,
+            required:true,
+            trim:true,
+        },
         password:{
             type:String,
-            required:[true,"Password is required"]
+            required:[true,"Password is required"],
+            trim:true,
         },
-        Jobs:[{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Job'
-        }],
         refreshToken:{
             type:String,
         }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { MapPin, Building2, ExternalLink, Calendar, Clock, AlignLeft } from 'lucide-react';
+import { MapPin, Building2, ExternalLink, Calendar, AlignLeft, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
 export default function JobList() {
   const [jobs, setJobs] = useState([]);
@@ -9,7 +9,7 @@ export default function JobList() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/jobs/jobList');
+        const res = await axios.get('http://localhost:3000/api/jobs/jobList', { withCredentials: true });
         const jobData = res.data.data || res.data;
         setJobs(Array.isArray(jobData) ? jobData : []);
       } catch (err) {
@@ -21,6 +21,18 @@ export default function JobList() {
 
     fetchJobs();
   }, []);
+
+  const getScoreColor = (score) => {
+    if (score >= 80) return "bg-green-100 text-green-800 border-green-200";
+    if (score >= 50) return "bg-yellow-50 text-yellow-800 border-yellow-200";
+    return "bg-red-50 text-red-800 border-red-200";
+  };
+
+  const getScoreIcon = (score) => {
+    if (score >= 80) return <CheckCircle className="w-4 h-4 mr-1" />;
+    if (score >= 50) return <AlertCircle className="w-4 h-4 mr-1" />;
+    return <XCircle className="w-4 h-4 mr-1" />;
+  };
 
   if (loading) {
     return (
@@ -43,7 +55,7 @@ export default function JobList() {
           onClick={() => window.location.reload()} 
           className="mt-4 sm:mt-0 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-blue-600 font-medium rounded-lg transition-colors border border-gray-200 flex items-center"
         >
-          <Clock className="w-4 h-4 mr-2" /> Refresh Data
+          Refresh Data
         </button>
       </div>
 
@@ -57,15 +69,28 @@ export default function JobList() {
           <p className="text-gray-500 mt-1">Start a new hunt from the dashboard to populate this list.</p>
         </div>
       ) : (
-        
+     
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {jobs.map((job) => (
+          {jobs.map((job) => {
+             
+             const ai = job.aiAnalysis;
+             const score = ai?.matchScore || 0;
+
+             return (
             <div 
               key={job._id} 
-              className="group bg-white flex flex-col h-full p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-200"
+              className="group bg-white flex flex-col h-full p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-200 relative overflow-hidden"
             >
               
-              <div className="flex justify-between items-start mb-4">
+              {ai && (
+                <div className={`absolute top-0 right-0 px-3 py-1.5 rounded-bl-xl border-b border-l font-bold text-sm flex items-center ${getScoreColor(score)}`}>
+                  {getScoreIcon(score)}
+                  {score}% Match
+                </div>
+              )}
+
+              
+              <div className="flex justify-between items-start mb-4 pr-20">
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     {job.title}
@@ -89,14 +114,31 @@ export default function JobList() {
                 </span>
               </div>
 
-              
-              <div className="flex-1 mb-6">
-                <div className="flex items-start space-x-2">
-                  <AlignLeft className="w-4 h-4 text-gray-400 mt-1 shrink-0" />
-                  <p className="text-sm text-gray-600 line-clamp-4 leading-relaxed">
-                    {job.description || "No description available for this role. Click 'View on LinkedIn' to read the full details on the original posting."}
-                  </p>
-                </div>
+             
+              <div className="flex-1 mb-6 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                {ai ? (
+                   <>
+                     <p className="text-sm text-gray-700 font-medium mb-2">🤖 AI Verdict:</p>
+                     <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed italic">
+                       "{ai.summary}"
+                     </p>
+                    
+                     {ai.missingSkills && ai.missingSkills.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-1">
+                            {ai.missingSkills.slice(0,3).map(skill => (
+                                <span key={skill} className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold uppercase rounded-md">
+                                    Missing: {skill}
+                                </span>
+                            ))}
+                        </div>
+                     )}
+                   </>
+                ) : (
+                   <div className="flex items-center space-x-2 text-gray-400">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="text-sm">Analyzing job...</span>
+                   </div>
+                )}
               </div>
 
               
@@ -111,7 +153,8 @@ export default function JobList() {
                 </a>
               </div>
             </div>
-          ))}
+          );
+          })}
         </div>
       )}
     </div>

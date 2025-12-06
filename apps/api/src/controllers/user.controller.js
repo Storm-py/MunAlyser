@@ -3,7 +3,9 @@ import {uploadOnCloudinary} from '../utils/cloudinary.js'
 import {User} from "../models/user.model.js"
 import {asyncHandler} from '../utils/asyncHandler.js'
 import {ApiError} from '../utils/ApiError.js'
-import { ApiResponse } from '../utils/ApiResponse.js'
+import { ApiResponse } from '../utils/ApiResponse.js' 
+import { PDFParse } from 'pdf-parse';
+
 
 
 
@@ -43,18 +45,29 @@ const registerUser=asyncHandler(async (req,res)=>{
     })
     if(existedUser) throw new ApiError(409,"You have to register through a new Usernmae or Email")
 
-    const avatarLocalPath= req.file?.path;
-    
+    const avatarLocalPath= req.files?.avatar?.[0]?.path
+    const cvLocalPath= req.files?.cv?.[0]?.path
 
     if(!avatarLocalPath) {throw new ApiError(400,"Avatar Required")}
+    if(!cvLocalPath) {throw new ApiError(400,"CV Required")}
+
+    const parser= new PDFParse({url:cvLocalPath});
+    const result = await parser.getText()
+    const rawText=result.text.replace(/\n\s*\n/g, '\n').trim();
+    await parser.destroy();
+
 
     const avatar=await uploadOnCloudinary(avatarLocalPath)
+    const cv=await uploadOnCloudinary(cvLocalPath)
 
     if(!avatar) throw new ApiError('400',"Avatar not Uploaded")
+    if(!cv) throw new ApiError('400',"Cv not Uploaded")
 
     const user=await User.create({
         fullName,
         avatar:avatar.url,
+        cv:cv.url,
+        parsedCv:rawText,
         email,
         username:username.toLowerCase(),
         password,

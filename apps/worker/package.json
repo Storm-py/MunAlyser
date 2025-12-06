@@ -12,8 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "bcrypt": "^6.0.0",
     "bullmq": "^5.65.0",
     "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.0",
     "nodemon": "^3.1.11",
     "puppeteer": "^24.31.0",

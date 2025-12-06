@@ -29,6 +29,15 @@ const userSchema=new mongoose.Schema(
             type:String,
             required:true,
         },
+        cv:{
+            type:String,
+            required:true,
+        },
+        parsedCv:{
+            type:String,
+            required:true,
+            trim:true,
+        },
         password:{
             type:String,
             required:[true,"Password is required"],
