@@ -9,9 +9,9 @@ import Dashboard from './pages/Dashboard.jsx'
 import JobList from './pages/JobList.jsx'
 import Signup from './pages/SignUp.jsx'
 import Signin from './pages/SignIn.jsx'
+import Layout from './Layout.jsx'
 import axios from 'axios'
-
-
+import Settings from './pages/Settings.jsx'
 
 
 
@@ -19,7 +19,15 @@ const router=createBrowserRouter(
   createRoutesFromElements(
     <>
     <Route
-    path='/'
+      path="/"
+      element={
+        <Suspense fallback={<div>Loading layout...</div>}>
+          <Layout/>
+        </Suspense>
+      }
+    >
+    <Route
+    index
     element={
       <AuthLayout>
       <Suspense fallback={<div><h1>Loading Layout...</h1></div>}>
@@ -54,6 +62,15 @@ const router=createBrowserRouter(
       </Suspense>
     }
     />
+    <Route
+    path='/settings'
+    element={
+      <Suspense fallback={<div><h1>Loading Layout...</h1></div>}>
+        <Settings/>
+      </Suspense>
+    }
+    />
+    </Route>
     </>
   )
 )

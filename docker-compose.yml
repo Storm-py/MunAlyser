@@ -23,6 +23,7 @@ services:
       - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
       - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
 
   worker:
     build: ./apps/worker
@@ -33,6 +34,7 @@ services:
     environment:
       - REDIS_HOST=${REDIS_HOST}
       - MONGO_URI=${MONGODB_URI}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     dns:
       - 8.8.8.8
       - 8.8.4.4

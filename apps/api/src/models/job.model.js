@@ -44,6 +44,10 @@ const jobSchema = new mongoose.Schema(
       type: String,
       default: "Any",
     },
+    coverLetter:{
+        type:String,
+        default:""
+    },
     datePosted: String,
   },
   {

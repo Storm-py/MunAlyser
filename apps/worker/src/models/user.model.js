@@ -45,7 +45,19 @@ const userSchema=new mongoose.Schema(
         },
         refreshToken:{
             type:String,
-        }
+        },
+        linkedinCookie:{
+            type:String,
+            default:""
+        },
+        autoApplyEnabled:{
+            type:Boolean,
+            default:false
+        },
+        dailyLimit:{
+            type:Number,
+            default:25,
+        }   
     },
     {timestamps:true}
 )

@@ -202,40 +202,51 @@ const changeCurrentPassword=asyncHandler(async (req,res)=>{
 
 })
 
-const updateAccountDetails=asyncHandler(async (req,res)=>{
-    const {fullName,email,username}=req.body
-    const user=await User.findById(req.user._id)
-    if(!fullName || !email || !username) throw new ApiError(400,"All fields cant be empty")
-    if(fullName){
-        user.fullName=fullName;
+const updateAccountDetails = asyncHandler(async (req, res) => {
+    const { fullName, email, username, linkedinCookie } = req.body;
+
+    if (!fullName && !email && !username && !linkedinCookie) {
+        throw new ApiError(400, "At least one field is required to update");
     }
-    else if(email){
-        user.email=email
-    }
-    else if(username){
-        user.username= username
-    }
-    user.save({validateBeforeSave:false})
-    return res.status(200).json(
-        new ApiResponse(200,{},"User details changed Successfully")
-    )
-})
-const updateUserAvatar=asyncHandler(async (req,res)=>{
-    const user=await User.findById(req.user._id)
-    let avatar=user.avatar
+
+    const user = await User.findById(req.user._id);
     
-    await deleteFromCloudinary(avatar) 
-    const avatarLocalPath=req.file?.path
-    if(!avatarLocalPath) throw new ApiError(400,"Avatar file is missing")
-    avatar=await uploadOnCloudinary(avatarLocalPath)
-    if(!avatar) throw new ApiError(400,"file not found")
-    user.avatar=avatar.url
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (username) user.username = username;
+    
+    if (linkedinCookie) {
+        user.linkedinCookie = linkedinCookie;
+    }
+
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200).json(
+        new ApiResponse(200, user, "Account details updated successfully")
+    );
+});
+
+const updateUserCv=asyncHandler(async (req,res)=>{
+    const user=await User.findById(req.user._id)
+    let cv=user.cv
+    
+    await deleteFromCloudinary(cv) 
+    const cvLocalPath=req.file?.path
+    if(!cvLocalPath) throw new ApiError(400,"cv file is missing")
+    cv=await uploadOnCloudinary(cvLocalPath)
+    if(!cv) throw new ApiError(400,"file not found")
+    user.cv=cv.url
     await user.save()
     return res.status(200).json(
-        new ApiResponse(200,{avatar},"Avatar changed Successfully")
+        new ApiResponse(200,{cv},"cv changed Successfully")
 )
 })
 
+const getCurrentUser = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+});
 
 export {
     registerUser,
@@ -244,5 +255,6 @@ export {
     refreshAccessToken,
     changeCurrentPassword,
     updateAccountDetails,
-    updateUserAvatar,
+    updateUserCv,
+    getCurrentUser
 }
